@@ -1,3 +1,7 @@
+var gameConfig = {
+  bombCount: 16
+}
+
 var game = {
   bombsOnBoard: 0,
   flagsAvaliable: 16,
@@ -76,10 +80,40 @@ function showBombs() {
   }
 }
 
+
+// Reconstruct Board
+function reconstructBoard() {
+  var cells = document.querySelectorAll('.cell');
+  for (var i = 0; i < cells.length; i++) {
+    cells[i].style.transform = `translate(0,0)`;
+  }
+}
+
+// Destroy Board
+function destroyBoard() {
+  var cells = document.querySelectorAll('.cell');
+  for (var i = 0; i < cells.length; i++) {
+    var x = Math.floor(Math.random() * (150 - 50) ) + 50;
+    var y = Math.floor(Math.random() * (150 - 50) ) + 50;
+
+    var xpol = Math.random() >= 0.5 ? "-" : "+";
+    var ypol = Math.random() >= 0.5 ? "-" : "+";
+
+    cells[i].style.transform = `translate(${xpol}${x}vw, ${ypol}${y}vh)`;
+  }
+}
+
 // End the game
 function killGame() {
   console.warn("GAME OVER!");
   showBombs();
+  setTimeout(_ => {
+    destroyBoard();
+  }, 2000);
+
+  setTimeout(_ => {
+    rebuildBoard();
+  }, 5000);
 }
 
 
@@ -266,7 +300,6 @@ function getSurroundingBombsAndCells(cell) {
       break;
     default:
       cell.style.color = "#aaaaaa";
-
   }
 
 
@@ -292,6 +325,24 @@ function triggerCell(cell) {
   }
 }
 
+// Check to see if they win the game
+function checkGame() {
+  var cells = document.querySelectorAll('.cell');
+
+  var clearCells = 0;
+  var isWinner = true;
+
+  for (var i = 0; i < cells.length; i++) {
+    if (cells[i].getAttribute("isBomb") === "true" && cells[i].getAttribute("flagged") !== "true") {
+      isWinner = false;
+    }
+  }
+
+  if (isWinner) {
+    alert("WINNER");
+  }
+}
+
 
 // Add listeners
 function addClickListeners() {
@@ -310,6 +361,7 @@ function addClickListeners() {
           }
         }
         updateFlagsIndicator();
+        checkGame();
       }
 
     });
@@ -325,18 +377,37 @@ function addClickListeners() {
           triggerCell(event.target);
         }
       }
+      checkGame();
     });
   }
 }
 
 
 
-
 // Set up the game
 function setupGame() {
+  game.bombsOnBoard = 0;
+  game.flagsAvaliable = gameConfig.bombCount;
   buildSweeperGrid();
   plantBombs();
   addClickListeners();
   updateFlagsIndicator();
 }
-setupGame();
+// setupGame();
+
+// When someone submits the setup form
+document.getElementById('setupForm').addEventListener('submit', event => {
+    event.preventDefault();
+    game.gridSize = parseInt(document.getElementById('gridSize').value);
+    gameConfig.bombCount = parseInt(document.getElementById('bombCount').value);
+    setupGame();
+    document.getElementById('setupGame').remove();
+});
+
+
+function rebuildBoard() {
+  reconstructBoard();
+  setTimeout(_ => {
+    setupGame();
+  }, 2000);
+}

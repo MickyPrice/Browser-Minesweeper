@@ -4,15 +4,13 @@
     <meta charset="utf-8">
     <title>MineSweeper</title>
 
-
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-
     <style media="screen">
       .cell {
         background-color: lightGray;
         background-size: cover;
         text-align: center;
         padding-top: 16px;
+        transition: transform 2s;
       }
       .cell[flagged="true"] {
         background-image: url('./red_flag.png');
@@ -20,7 +18,18 @@
       .cell[isBomb="true"] {
         /* background-color: red; */
       }
+      #game {
+        display: table;
+        margin: 0 auto;
+        padding: 20px 0;
+      }
+      .gameData {
+        text-align: center;
+      }
     </style>
+
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    
 
 
   </head>
@@ -34,6 +43,30 @@
       <h2 class="text-3xl mt-6">Flags Left: <span id="flags">-</span></h2>
     </div>
 
+    <div class="fixed inset-0 bg-gray-100" id="setupGame">
+      <div class="w-full max-w-xs mx-auto mt-32" >
+        <form id="setupForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <h2 class="text-2xl mb-6 font-bold text-center text-gray-800">Minesweeper Setup</h2>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="gridSize">
+              Squared Size
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gridSize" min="1" type="number" placeholder="Eg, 100" value=100>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="bombCount">
+              Bomb Count
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="bombCount" min="1" type="number" placeholder="Eg, 16" value=16>
+          </div>
+          <div class="flex items-center justify-between">
+            <button class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+              Generate Game Board
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <div id="game">
 
