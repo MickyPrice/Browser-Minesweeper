@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>MineSweeper</title>
+
+
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+    <style media="screen">
+      .cell {
+        background-color: lightGray;
+        background-size: cover;
+        text-align: center;
+        padding-top: 16px;
+      }
+      .cell[flagged="true"] {
+        background-image: url('./red_flag.png');
+      }
+      .cell[isBomb="true"] {
+        /* background-color: red; */
+      }
+    </style>
+
+
+  </head>
+  <body>
+
+    <div class="gameData">
+      <h3 class="text-2xl mt-4">Controls</h3>
+      <kbd>Left Click</kbd> - Place Flag<br>
+      <kbd>Right Click</kbd> - Trigger Cell
+
+      <h2 class="text-3xl mt-6">Flags Left: <span id="flags">-</span></h2>
+    </div>
+
+
+    <div id="game">
+
+    </div>
+
+    <script src="./sweeper.js" charset="utf-8"></script>
+  </body>
+</html>
