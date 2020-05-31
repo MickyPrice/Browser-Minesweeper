@@ -85,7 +85,7 @@ function showBombs() {
 function reconstructBoard() {
   var cells = document.querySelectorAll('.cell');
   for (var i = 0; i < cells.length; i++) {
-    cells[i].style.transform = `translate(0,0)`;
+    cells[i].style.transform = `translate(0,0) rotate(0deg)`;
   }
 }
 
@@ -99,7 +99,7 @@ function destroyBoard() {
     var xpol = Math.random() >= 0.5 ? "-" : "+";
     var ypol = Math.random() >= 0.5 ? "-" : "+";
 
-    cells[i].style.transform = `translate(${xpol}${x}vw, ${ypol}${y}vh)`;
+    cells[i].style.transform = `translate(${xpol}${x}vw, ${ypol}${y}vh) rotate(360deg)`;
   }
 }
 
@@ -339,7 +339,7 @@ function checkGame() {
   }
 
   if (isWinner) {
-    alert("WINNER");
+    startConfetti();
   }
 }
 
@@ -410,4 +410,63 @@ function rebuildBoard() {
   setTimeout(_ => {
     setupGame();
   }, 2000);
+}
+
+function refreshBoard() {
+  var gameBoard = document.getElementById('game');
+}
+
+
+function startConfetti() {
+  var containers = [];
+  var interval = setInterval(function () {
+
+    var confettiContainer = document.createElement('div');
+    confettiContainer.classList.add('fixed');
+    confettiContainer.classList.add('inset-0');
+    confettiContainer.classList.add('flex');
+    confettiContainer.classList.add('justify-around');
+
+    containers.push(confettiContainer);
+
+    var allConfetti = [];
+
+    for (var i = 0; i < 100; i++) {
+      var confetti = document.createElement('div');
+      confetti.classList.add('confetti');
+
+      var r = Math.floor(Math.random() * (250 - 0) ) + 0;
+      var g = Math.floor(Math.random() * (250 - 0) ) + 0;
+      var b = Math.floor(Math.random() * (250 - 0) ) + 0;
+
+      confetti.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+
+      confettiContainer.appendChild(confetti);
+
+      allConfetti.push(confetti);
+    }
+
+    document.body.prepend(confettiContainer);
+
+    setTimeout(_ => {
+        for (var i = 0; i < allConfetti.length; i++) {
+          var depth = Math.floor(Math.random() * (200 - 110) ) + 110;
+          var rotate = Math.floor(Math.random() * (300 - 90) ) + 90;
+          allConfetti[i].style.transform = `translateY(${depth}vh) rotate(${rotate}deg)`;
+        }
+    }, 100);
+  }, 500);
+
+
+  setTimeout(_ => {
+    clearInterval(interval);
+  }, 3000);
+
+  setTimeout(_ => {
+    for (var i = 0; i < containers.length; i++) {
+      containers[i].remove();
+    }
+    setupGame();
+  }, 6000);
+
 }
