@@ -30,6 +30,8 @@ function buildSweeperGrid() {
       cell.setAttribute('cell', j);
       cell.classList.add('w-16');
       cell.classList.add('h-16');
+
+
       cell.classList.add('cell');
       cell.classList.add('border');
       cell.classList.add('border-black');
@@ -107,12 +109,16 @@ function destroyBoard() {
 function killGame() {
   console.warn("GAME OVER!");
   showBombs();
+  var overlay = document.createElement('div');
+  overlay.setAttribute('class', 'fixed inset-0 z-40 bg-red');
+  document.body.prepend(overlay);
   setTimeout(_ => {
     destroyBoard();
   }, 2000);
 
   setTimeout(_ => {
     rebuildBoard();
+    overlay.remove();
   }, 5000);
 }
 
@@ -431,7 +437,7 @@ function startConfetti() {
 
     var allConfetti = [];
 
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 150; i++) {
       var confetti = document.createElement('div');
       confetti.classList.add('confetti');
 
@@ -468,5 +474,51 @@ function startConfetti() {
     }
     setupGame();
   }, 6000);
+
+}
+
+
+
+var cheats = {}
+cheats.flashBombs = _ => {
+  var cells = document.querySelectorAll('.cell[isBomb="true"]');
+  for (var i = 0; i < cells.length; i++) {
+    cells[i].style.backgroundColor = "red";
+  }
+  setTimeout(function () {
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].style.backgroundColor = "";
+    }
+  }, 1000);
+}
+cheats.flagAllBombs = _ => {
+  var cells = document.querySelectorAll('.cell[isBomb="true"]');
+  for (var i = 0; i < cells.length; i++) {
+    cells[i].setAttribute('flagged', 'true');
+  }
+  checkGame();
+}
+cheats.clearAllCells = _ => {
+  var cells = document.querySelectorAll('.cell');
+  for (var i = 0; i < cells.length; i++) {
+    if (!isBomb(cells[i])) {
+      triggerCell(cells[i]);
+    }
+  }
+}
+cheats.showHint = _ => {
+  var cells = document.querySelectorAll('.cell');
+  var clearCells = [];
+  for (var i = 0; i < cells.length; i++) {
+    if (!isBomb(cells[i]) && !isClear(cells[i])) {
+      clearCells.push(cells[i]);
+    }
+  }
+  var cell = clearCells[[Math.floor(Math.random()*clearCells.length)]];
+  if(isValidCell(cell)) {
+    triggerCell(cell);
+  } else {
+    console.warn("Failed to show hint: All cells are clear");
+  }
 
 }
