@@ -301,8 +301,8 @@ function getSurroundingBombsAndCells(cell) {
     case 7:
       cell.style.color = "purple";
       break;
-    case 7:
-      cell.style.color = "gray";
+    case 8:
+      cell.style.color = "#444444";
       break;
     default:
       cell.style.color = "#aaaaaa";
